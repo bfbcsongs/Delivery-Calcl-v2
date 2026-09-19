@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Miki Table</title>
+<title>Miki Table & Ledger</title>
 
 <style>
 * {
@@ -21,7 +21,7 @@ body {
 .table-box {
     width: 100%;
     max-width: 600px;
-    margin: 0 auto;
+    margin: 0 auto 20px auto;
     background: white;
     border: 1px solid #d1d5db;
 }
@@ -65,15 +65,24 @@ td {
 }
 
 table input {
-    width: 85px;
+    width: 100%;
     max-width: 100%;
     height: 22px;
     padding: 2px;
     border: 1px solid #9ca3af;
     border-radius: 4px;
     text-align: center;
-    font-size: 14px;
+    font-size: 13px;
     background: white;
+}
+
+.table-box-2 table input {
+    font-size: 11px;
+    height: 24px;
+}
+
+.table-box-2 th {
+    font-size: 11px;
 }
 
 .direct-amount-input {
@@ -146,37 +155,15 @@ table input:focus {
     body {
         padding: 15px 5px;
     }
-
-    th,
-    td {
+    th, td {
         height: 24px;
         padding: 2px;
     }
-
     th {
-        font-size: 11px;
-    }
-
-    td {
-        font-size: 12px;
-    }
-
-    table input {
-        width: 70px;
-        height: 20px;
-        font-size: 12px;
-    }
-
-    .sync-cell label {
         font-size: 10px;
     }
-
-    .clear-btn {
+    td {
         font-size: 11px;
-    }
-
-    .miki {
-        padding-left: 8px;
     }
 }
 </style>
@@ -184,8 +171,8 @@ table input:focus {
 
 <body>
 
+<!-- FIRST TABLE -->
 <div class="table-box">
-
 <table>
     <thead>
         <tr>
@@ -196,121 +183,57 @@ table input:focus {
         </tr>
     </thead>
     <tbody>
-
-    <!-- ROW 1 -->
     <tr>
         <td class="miki">REG</td>
-        <td>
-            <input type="number" id="qtyReg"
-                   min="0" step="any"
-                   oninput="syncFromTable('Reg')">
-        </td>
-        <td>
-            <input type="number" id="priceReg"
-                   min="0" step="any"
-                   value="45"
-                   oninput="calculate()">
-        </td>
+        <td><input type="number" id="qtyReg" min="0" step="any" oninput="syncFromTable('Reg')"></td>
+        <td><input type="number" id="priceReg" min="0" step="any" value="45" oninput="calculate()"></td>
         <td class="amount" id="amountReg">0</td>
     </tr>
-
-    <!-- ROW 2 -->
     <tr>
         <td class="miki">FRESH</td>
-        <td>
-            <input type="number" id="qtyFresh"
-                   min="0" step="any"
-                   oninput="syncFromTable('Fresh')">
-        </td>
-        <td>
-            <input type="number" id="priceFresh"
-                   min="0" step="any"
-                   value="45"
-                   oninput="calculate()">
-        </td>
+        <td><input type="number" id="qtyFresh" min="0" step="any" oninput="syncFromTable('Fresh')"></td>
+        <td><input type="number" id="priceFresh" min="0" step="any" value="45" oninput="calculate()"></td>
         <td class="amount" id="amountFresh">0</td>
     </tr>
-
-    <!-- ROW 3 -->
     <tr>
         <td class="miki">CAB</td>
-        <td>
-            <input type="number" id="qtyCab"
-                   min="0" step="any"
-                   oninput="syncFromTable('Cab')">
-        </td>
-        <td>
-            <input type="number" id="priceCab"
-                   min="0" step="any"
-                   value="40"
-                   oninput="calculate()">
-        </td>
+        <td><input type="number" id="qtyCab" min="0" step="any" oninput="syncFromTable('Cab')"></td>
+        <td><input type="number" id="priceCab" min="0" step="any" value="40" oninput="calculate()"></td>
         <td class="amount" id="amountCab">0</td>
     </tr>
-
-    <!-- ROW 4 -->
     <tr>
         <td class="miki">BO</td>
-        <td>
-            <input type="number" id="qtyBo"
-                   min="0" step="any"
-                   oninput="syncFromTable('Bo')">
-        </td>
-        <td>
-            <input type="number" id="priceBo"
-                   min="0" step="any"
-                   value="45"
-                   oninput="calculate()">
-        </td>
+        <td><input type="number" id="qtyBo" min="0" step="any" oninput="syncFromTable('Bo')"></td>
+        <td><input type="number" id="priceBo" min="0" step="any" value="45" oninput="calculate()"></td>
         <td class="amount" id="amountBo">0</td>
     </tr>
-
-    <!-- ROW 5: TOTAL -->  
     <tr>
         <td class="miki">TOTAL</td>
         <td></td>
         <td></td>
         <td class="amount" id="totalAmount">0</td>
     </tr>
-
-    <!-- ROW 6: BAL -->
     <tr>
         <td></td>
         <td></td>
         <td class="label-cell">BAL</td>
-        <td>
-            <input type="number" id="inputBal"
-                   min="0" step="any"
-                   class="direct-amount-input"
-                   oninput="calculate()">
-        </td>
+        <td><input type="number" id="inputBal" min="0" step="any" class="direct-amount-input" oninput="calculate()"></td>
     </tr>
-
-    <!-- ROW 7: PAY -->
     <tr>
         <td></td>
         <td></td>
         <td class="label-cell">PAY</td>
-        <td>
-            <input type="number" id="inputPay"
-                   min="0" step="any"
-                   class="direct-amount-input"
-                   oninput="calculate()">
-        </td>
+        <td><input type="number" id="inputPay" min="0" step="any" class="direct-amount-input" oninput="calculate()"></td>
     </tr>
-
-    <!-- ROW 8: NET TOTAL -->  
     <tr>
         <td class="miki">NET TOTAL</td>
         <td></td>
         <td></td>
         <td class="amount" id="netTotalAmount">0</td>
     </tr>
-
     </tbody>
 </table>
 
-    <!-- 5-COLUMN SYNC PANEL AT THE BOTTOM -->
     <div class="sync-panel">
         <div class="sync-cell">
             <label>Dry</label>
@@ -332,15 +255,64 @@ table input:focus {
             <button class="clear-btn" onclick="clearAllQty()">CLEAR</button>
         </div>
     </div>
+</div>
 
+<!-- SECOND TABLE (8 COLUMNS, 18 ROWS) -->
+<div class="table-box table-box-2">
+<table>
+    <colgroup>
+        <col style="width: 20%;">
+        <col style="width: 10%;">
+        <col style="width: 10%;">
+        <col style="width: 10%;">
+        <col style="width: 10%;">
+        <col style="width: 10%;">
+        <col style="width: 10%;">
+        <col style="width: 20%;">
+    </colgroup>
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Dry</th>
+            <th>Fresh</th>
+            <th>Cab</th>
+            <th>BO</th>
+            <th>Bal</th>
+            <th>Pay</th>
+            <th>Amount</th>
+        </tr>
+    </thead>
+    <tbody>
+        <!-- Rows 2 to 17: Input rows (16 rows) -->
+        <script>
+            for (let i = 1; i <= 16; i++) {
+                document.write(`
+                    <tr>
+                        <td><input type="text" id="ledgerName_${i}"></td>
+                        <td><input type="number" id="ledgerDry_${i}" min="0" step="any"></td>
+                        <td><input type="number" id="ledgerFresh_${i}" min="0" step="any"></td>
+                        <td><input type="number" id="ledgerCab_${i}" min="0" step="any"></td>
+                        <td><input type="number" id="ledgerBo_${i}" min="0" step="any"></td>
+                        <td><input type="number" id="ledgerBal_${i}" min="0" step="any"></td>
+                        <td><input type="number" id="ledgerPay_${i}" min="0" step="any"></td>
+                        <td><input type="number" id="ledgerAmount_${i}" min="0" step="any"></td>
+                    </tr>
+                `);
+            }
+        </script>
+        <!-- Row 18: Net Total Row -->
+        <tr>
+            <td class="miki">NET TOTAL</td>
+            <td></td><td></td><td></td><td></td><td></td><td></td>
+            <td class="amount" id="ledgerNetTotal">0</td>
+        </tr>
+    </tbody>
+</table>
 </div>
 
 <script>
-
 function getNumber(id) {
-    const value = parseFloat(
-        document.getElementById(id).value
-    );
+    const value = parseFloat(document.getElementById(id).value);
     return isNaN(value) ? 0 : value;
 }
 
@@ -423,18 +395,15 @@ function saveData() {
         inputBal: document.getElementById("inputBal").value,
         inputPay: document.getElementById("inputPay").value
     };
-
     localStorage.setItem("miki_table_data", JSON.stringify(data));
 }
 
 function loadData() {
     const saved = localStorage.getItem("miki_table_data");
-
     if (!saved) {
         calculate();
         return;
     }
-
     const data = JSON.parse(saved);
 
     document.getElementById("qtyReg").value = data.qtyReg || "";
@@ -460,7 +429,6 @@ function loadData() {
 }
 
 window.onload = loadData;
-
 </script>
 
 </body>
