@@ -289,12 +289,12 @@ table input:focus {
                 document.write(`
                     <tr>
                         <td><input type="text" id="ledgerName_${i}"></td>
-                        <td><input type="number" id="ledgerDry_${i}" min="0" step="any"></td>
-                        <td><input type="number" id="ledgerFresh_${i}" min="0" step="any"></td>
-                        <td><input type="number" id="ledgerCab_${i}" min="0" step="any"></td>
-                        <td><input type="number" id="ledgerBo_${i}" min="0" step="any"></td>
-                        <td><input type="number" id="ledgerBal_${i}" min="0" step="any"></td>
-                        <td><input type="number" id="ledgerPay_${i}" min="0" step="any"></td>
+                        <td><input type="number" id="ledgerDry_${i}" min="0" step="any" oninput="syncMainTable(${i})"></td>
+                        <td><input type="number" id="ledgerFresh_${i}" min="0" step="any" oninput="syncMainTable(${i})"></td>
+                        <td><input type="number" id="ledgerCab_${i}" min="0" step="any" oninput="syncMainTable(${i})"></td>
+                        <td><input type="number" id="ledgerBo_${i}" min="0" step="any" oninput="syncMainTable(${i})"></td>
+                        <td><input type="number" id="ledgerBal_${i}" min="0" step="any" oninput="syncMainTable(${i})"></td>
+                        <td><input type="number" id="ledgerPay_${i}" min="0" step="any" oninput="syncMainTable(${i})"></td>
                         <td><input type="number" id="ledgerAmount_${i}" min="0" step="any"></td>
                     </tr>
                 `);
@@ -382,6 +382,31 @@ function calculate() {
     saveData();
 }
 
+function syncMainTable(row) {
+    // Kinukuha ang values mula sa tinukoy na row sa ikalawang table
+    const dryVal = document.getElementById(`ledgerDry_${row}`).value;
+    const freshVal = document.getElementById(`ledgerFresh_${row}`).value;
+    const cabVal = document.getElementById(`ledgerCab_${row}`).value;
+    const boVal = document.getElementById(`ledgerBo_${row}`).value;
+    const balVal = document.getElementById(`ledgerBal_${row}`).value;
+    const payVal = document.getElementById(`ledgerPay_${row}`).value;
+
+    // Ilalagay ang mga ito sa main table sa taas
+    if(dryVal !== "") document.getElementById("qtyReg").value = dryVal;
+    if(freshVal !== "") document.getElementById("qtyFresh").value = freshVal;
+    if(cabVal !== "") document.getElementById("qtyCab").value = cabVal;
+    if(boVal !== "") document.getElementById("qtyBo").value = boVal;
+    if(balVal !== "") document.getElementById("inputBal").value = balVal;
+    if(payVal !== "") document.getElementById("inputPay").value = payVal;
+
+    // I-trigger ang calculation para ma-update ang Net Total sa taas
+    calculate();
+
+    // Kunin ang nakuhang net total sa taas at ilagay sa Amount ng row na ito sa ikalawang table
+    const netTotalText = document.getElementById("netTotalAmount").textContent.replace(/,/g, '');
+    document.getElementById(`ledgerAmount_${row}`).value = netTotalText;
+}
+
 function saveData() {
     const data = {
         qtyReg: document.getElementById("qtyReg").value,
@@ -432,4 +457,4 @@ window.onload = loadData;
 </script>
 
 </body>
-</html>
+                       </html>
