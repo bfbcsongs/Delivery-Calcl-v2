@@ -470,6 +470,332 @@ function calculateClients() {
         const freshAmt = freshVal * 45;
         const cabAmt = cabVal * 40;
         const boAmt = (boVal / 2) * 45;
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Miki Calculator & Client Table</title>
+<style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    padding: 20px 10px;
+    font-family: Arial, sans-serif;
+    background: #f3f4f6;
+}
+
+/* 1ST TABLE STYLING */
+.table-box {
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto 30px auto;
+    background: white;
+    border: 1px solid #d1d5db;
+}
+
+.table-box table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+}
+
+.table-box th,
+.table-box td {
+    border: 1px solid #d1d5db;
+    height: 26px; 
+    padding: 2px 4px;
+    text-align: center;
+    vertical-align: middle;
+}
+
+.table-box th {
+    background: #111827;
+    color: white;
+    font-size: 13px;
+    font-weight: bold;
+}
+
+.table-box td {
+    background: white;
+    font-size: 14px;
+}
+
+.miki {
+    text-align: left;
+    padding-left: 12px;
+    font-weight: bold;
+}
+
+.label-cell {
+    font-weight: bold;
+    text-align: center;
+}
+
+.table-box input {
+    width: 85px;
+    max-width: 100%;
+    height: 22px;
+    padding: 2px;
+    border: 1px solid #9ca3af;
+    border-radius: 4px;
+    text-align: center;
+    font-size: 14px;
+    background: white;
+}
+
+.table-box input:focus {
+    outline: 2px solid #94a3b8;
+}
+
+.amount {
+    font-weight: bold;
+}
+
+/* 2ND TABLE STYLING (CLIENTS TABLE) */
+.client-container {
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto;
+    background: white;
+    border: 1px solid #d1d5db;
+    overflow-x: auto;
+}
+
+.client-container table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+}
+
+/* Column Widths for Client Table */
+.client-container colgroup col:nth-child(1) { width: 20%; }
+.client-container colgroup col:nth-child(2) { width: 10%; }
+.client-container colgroup col:nth-child(3) { width: 10%; }
+.client-container colgroup col:nth-child(4) { width: 10%; }
+.client-container colgroup col:nth-child(5) { width: 10%; }
+.client-container colgroup col:nth-child(6) { width: 10%; }
+.client-container colgroup col:nth-child(7) { width: 10%; }
+.client-container colgroup col:nth-child(8) { width: 20%; }
+
+.client-container th, 
+.client-container td {
+    border: 1px solid #d1d5db;
+    height: 28px;
+    padding: 2px 4px;
+    text-align: center;
+    vertical-align: middle;
+    font-size: 13px;
+}
+
+.client-container th {
+    background: #111827;
+    color: white;
+    font-weight: bold;
+}
+
+.client-container td input {
+    width: 100%;
+    height: 24px;
+    padding: 2px;
+    border: 1px solid #9ca3af;
+    border-radius: 3px;
+    text-align: center;
+    font-size: 13px;
+    background: white;
+}
+
+.client-container td input[type="text"] {
+    text-align: left;
+    padding-left: 6px;
+}
+
+.client-container td input:focus {
+    outline: 2px solid #94a3b8;
+}
+
+.client-amount-cell {
+    font-weight: bold;
+    text-align: right;
+    padding-right: 8px;
+}
+
+.total-row td {
+    background: #e5e7eb;
+    font-weight: bold;
+}
+</style>
+</head>
+<body>
+
+<!-- 1ST TABLE: MASTER SUMMARY CALCULATOR -->
+<div class="table-box">
+<table>
+    <thead>
+        <tr>
+            <th>Item</th>
+            <th>Total Qty (Sync)</th>
+            <th>Price</th>
+            <th>Amount</th>
+        </tr>
+    </thead>
+    <tbody>
+    <!-- ROW 1 -->
+    <tr>
+        <td class="miki">REG (Dry)</td>
+        <td id="syncDry" class="amount" style="background:#f9fafb;">0</td>
+        <td><input type="number" id="priceReg" min="0" step="any" value="45" oninput="calculateMaster()"></td>
+        <td class="amount" id="amountReg">0</td>
+    </tr>
+    <!-- ROW 2 -->
+    <tr>
+        <td class="miki">FRESH</td>
+        <td id="syncFresh" class="amount" style="background:#f9fafb;">0</td>
+        <td><input type="number" id="priceFresh" min="0" step="any" value="45" oninput="calculateMaster()"></td>
+        <td class="amount" id="amountFresh">0</td>
+    </tr>
+    <!-- ROW 3 -->
+    <tr>
+        <td class="miki">CAB</td>
+        <td id="syncCab" class="amount" style="background:#f9fafb;">0</td>
+        <td><input type="number" id="priceCab" min="0" step="any" value="40" oninput="calculateMaster()"></td>
+        <td class="amount" id="amountCab">0</td>
+    </tr>
+    <!-- ROW 4 -->
+    <tr>
+        <td class="miki">BO</td>
+        <td id="syncBo" class="amount" style="background:#f9fafb;">0</td>
+        <td><input type="number" id="priceBo" min="0" step="any" value="45" oninput="calculateMaster()"></td>
+        <td class="amount" id="amountBo">0</td>
+    </tr>
+    <!-- ROW 5: TOTAL -->  
+    <tr>
+        <td class="miki">TOTAL</td>
+        <td></td>
+        <td></td>
+        <td class="amount" id="totalAmount">0</td>
+    </tr>
+    <!-- ROW 6: BAL -->
+    <tr>
+        <td></td>
+        <td></td>
+        <td class="label-cell">BAL</td>
+        <td id="syncBal" class="amount" style="background:#f9fafb; text-align:right; padding-right:8px;">0</td>
+    </tr>
+    <!-- ROW 7: PAY -->
+    <tr>
+        <td></td>
+        <td></td>
+        <td class="label-cell">PAY</td>
+        <td id="syncPay" class="amount" style="background:#f9fafb; text-align:right; padding-right:8px;">0</td>
+    </tr>
+    <!-- ROW 8: NET TOTAL -->  
+    <tr>
+        <td class="miki">NET TOTAL</td>
+        <td></td>
+        <td></td>
+        <td class="amount" id="netTotalAmount">0</td>
+    </tr>
+    </tbody>
+</table>
+</div>
+
+<br>
+
+<!-- 2ND TABLE: 18-ROW CLIENT TABLE -->
+<div class="client-container">
+    <table>
+        <colgroup>
+            <col><col><col><col><col><col><col><col>
+        </colgroup>
+        <thead>
+            <tr>
+                <th>Names</th>
+                <th>Dry</th>
+                <th>Fresh</th>
+                <th>Cab</th>
+                <th>BO</th>
+                <th>Bal</th>
+                <th>Pay</th>
+                <th>Amount</th>
+            </tr>
+        </thead>
+        <tbody id="tableBody">
+            <!-- Rows 2 to 17 generated via JS -->
+        </tbody>
+        <tfoot>
+            <!-- Row 18: Total Row -->
+            <tr class="total-row">
+                <td style="text-align: left; padding-left: 6px;">TOTAL</td>
+                <td id="totDry">0</td>
+                <td id="totFresh">0</td>
+                <td id="totCab">0</td>
+                <td id="totBo">0</td>
+                <td id="totBal">0</td>
+                <td id="totPay">0</td>
+                <td class="client-amount-cell" id="totAmount">0</td>
+            </tr>
+        </tfoot>
+    </table>
+</div>
+
+<script>
+function formatMoney(value) {
+    return value.toLocaleString("en-US", {
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 2
+    });
+}
+
+// BUILD CLIENT TABLE ROWS (Rows 2 to 17)
+function buildClientTable() {
+    const tbody = document.getElementById("tableBody");
+    tbody.innerHTML = "";
+
+    for (let i = 0; i < 16; i++) {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+            <td><input type="text" class="c-name" data-index="${i}" placeholder="Client ${i+1}" oninput="calculateAll()"></td>
+            <td><input type="number" min="0" step="any" class="c-dry" data-index="${i}" oninput="calculateAll()"></td>
+            <td><input type="number" min="0" step="any" class="c-fresh" data-index="${i}" oninput="calculateAll()"></td>
+            <td><input type="number" min="0" step="any" class="c-cab" data-index="${i}" oninput="calculateAll()"></td>
+            <td><input type="number" min="0" step="any" class="c-bo" data-index="${i}" oninput="calculateAll()"></td>
+            <td><input type="number" min="0" step="any" class="c-bal" data-index="${i}" oninput="calculateAll()"></td>
+            <td><input type="number" min="0" step="any" class="c-pay" data-index="${i}" oninput="calculateAll()"></td>
+            <td class="client-amount-cell c-amount" id="amount_${i}">0</td>
+        `;
+        tbody.appendChild(tr);
+    }
+    loadAllData();
+}
+
+function calculateAll() {
+    const names = document.querySelectorAll(".c-name");
+    const drys = document.querySelectorAll(".c-dry");
+    const freshs = document.querySelectorAll(".c-fresh");
+    const cabs = document.querySelectorAll(".c-cab");
+    const bos = document.querySelectorAll(".c-bo");
+    const bals = document.querySelectorAll(".c-bal");
+    const pays = document.querySelectorAll(".c-pay");
+
+    let sumDry = 0, sumFresh = 0, sumCab = 0, sumBo = 0, sumBal = 0, sumPay = 0, sumAmount = 0;
+    let savedClients = [];
+
+    for (let i = 0; i < 16; i++) {
+        const dryVal = parseFloat(drys[i].value) || 0;
+        const freshVal = parseFloat(freshs[i].value) || 0;
+        const cabVal = parseFloat(cabs[i].value) || 0;
+        const boVal = parseFloat(bos[i].value) || 0;
+        const balVal = parseFloat(bals[i].value) || 0;
+        const payVal = parseFloat(pays[i].value) || 0;
+
+        const regAmt = dryVal * 45;
+        const freshAmt = freshVal * 45;
+        const cabAmt = cabVal * 40;
+        const boAmt = (boVal / 2) * 45;
 
         const rowTotal = regAmt + freshAmt + cabAmt - boAmt + balVal - payVal;
 
@@ -494,6 +820,7 @@ function calculateClients() {
         });
     }
 
+    // Update Client Table Footer Totals
     document.getElementById("totDry").textContent = sumDry ? formatMoney(sumDry) : "0";
     document.getElementById("totFresh").textContent = sumFresh ? formatMoney(sumFresh) : "0";
     document.getElementById("totCab").textContent = sumCab ? formatMoney(sumCab) : "0";
@@ -502,54 +829,61 @@ function calculateClients() {
     document.getElementById("totPay").textContent = sumPay ? formatMoney(sumPay) : "0";
     document.getElementById("totAmount").textContent = formatMoney(sumAmount);
 
-    saveClientData(savedClients);
-}
+    // Sync to Master Summary Table in the Upper Section
+    document.getElementById("syncDry").textContent = sumDry ? formatMoney(sumDry) : "0";
+    document.getElementById("syncFresh").textContent = sumFresh ? formatMoney(sumFresh) : "0";
+    document.getElementById("syncCab").textContent = sumCab ? formatMoney(sumCab) : "0";
+    document.getElementById("syncBo").textContent = sumBo ? formatMoney(sumBo) : "0";
+    document.getElementById("syncBal").textContent = sumBal ? formatMoney(sumBal) : "0";
+    document.getElementById("syncPay").textContent = sumPay ? formatMoney(sumPay) : "0";
 
-function saveMainData() {
-    const mainData = {
-        qtyReg: document.getElementById("qtyReg").value,
-        priceReg: document.getElementById("priceReg").value,
-        qtyFresh: document.getElementById("qtyFresh").value,
-        priceFresh: document.getElementById("priceFresh").value,
-        qtyCab: document.getElementById("qtyCab").value,
-        priceCab: document.getElementById("priceCab").value,
-        qtyBo: document.getElementById("qtyBo").value,
-        priceBo: document.getElementById("priceBo").value,
-        inputBal: document.getElementById("inputBal").value,
-        inputPay: document.getElementById("inputPay").value
-    };
-    localStorage.setItem("miki_main_calc_data", JSON.stringify(mainData));
-}
+    // Keep global reference for master calculation
+    window.currentSum = { sumDry, sumFresh, sumCab, sumBo, sumBal, sumPay };
+    calculateMaster();
 
-function saveClientData(savedClients) {
     localStorage.setItem("miki_client_rows_data", JSON.stringify(savedClients));
 }
 
+function calculateMaster() {
+    const sums = window.currentSum || { sumDry: 0, sumFresh: 0, sumCab: 0, sumBo: 0, sumBal: 0, sumPay: 0 };
+
+    const priceReg = parseFloat(document.getElementById("priceReg").value) || 0;
+    const priceFresh = parseFloat(document.getElementById("priceFresh").value) || 0;
+    const priceCab = parseFloat(document.getElementById("priceCab").value) || 0;
+    const priceBo = parseFloat(document.getElementById("priceBo").value) || 0;
+
+    const amountReg = sums.sumDry * priceReg;
+    const amountFresh = sums.sumFresh * priceFresh;
+    const amountCab = sums.sumCab * priceCab;
+    const amountBo = (sums.sumBo / 2) * priceBo;
+
+    const total = amountReg + amountFresh + amountCab - amountBo;
+    const netTotal = total + sums.sumBal - sums.sumPay;
+
+    document.getElementById("amountReg").textContent = formatMoney(amountReg);
+    document.getElementById("amountFresh").textContent = formatMoney(amountFresh);
+    document.getElementById("amountCab").textContent = formatMoney(amountCab);
+    document.getElementById("amountBo").textContent = formatMoney(amountBo);
+    document.getElementById("totalAmount").textContent = formatMoney(total);
+    document.getElementById("netTotalAmount").textContent = formatMoney(netTotal);
+
+    // Save prices configuration
+    const prices = {
+        priceReg, priceFresh, priceCab, priceBo
+    };
+    localStorage.setItem("miki_master_prices", JSON.stringify(prices));
+}
+
 function loadAllData() {
-    // Load Main Calculator Data
-    const savedMain = localStorage.getItem("miki_main_calc_data");
-    if (savedMain) {
-        const data = JSON.parse(savedMain);
-        document.getElementById("qtyReg").value = data.qtyReg || "";
-        document.getElementById("syncDry").value = data.qtyReg || "";
-        document.getElementById("priceReg").value = data.priceReg || "45";
-
-        document.getElementById("qtyFresh").value = data.qtyFresh || "";
-        document.getElementById("syncFresh").value = data.qtyFresh || "";
-        document.getElementById("priceFresh").value = data.priceFresh || "45";
-
-        document.getElementById("qtyCab").value = data.qtyCab || "";
-        document.getElementById("syncCab").value = data.qtyCab || "";
-        document.getElementById("priceCab").value = data.priceCab || "40";
-
-        document.getElementById("qtyBo").value = data.qtyBo || "";
-        document.getElementById("syncBo").value = data.qtyBo || "";
-        document.getElementById("priceBo").value = data.priceBo || "45";
-
-        document.getElementById("inputBal").value = data.inputBal || "";
-        document.getElementById("inputPay").value = data.inputPay || "";
+    // Load Master Prices
+    const savedPrices = localStorage.getItem("miki_master_prices");
+    if (savedPrices) {
+        const p = JSON.parse(savedPrices);
+        if(p.priceReg !== undefined) document.getElementById("priceReg").value = p.priceReg;
+        if(p.priceFresh !== undefined) document.getElementById("priceFresh").value = p.priceFresh;
+        if(p.priceCab !== undefined) document.getElementById("priceCab").value = p.priceCab;
+        if(p.priceBo !== undefined) document.getElementById("priceBo").value = p.priceBo;
     }
-    calculate();
 
     // Load Client Table Data
     const savedClients = localStorage.getItem("miki_client_rows_data");
@@ -574,8 +908,8 @@ function loadAllData() {
                 pays[i].value = item.pay || "";
             }
         });
-        calculateClients();
     }
+    calculateAll();
 }
 
 window.onload = function() {
@@ -584,4 +918,4 @@ window.onload = function() {
 </script>
 
 </body>
-    </html>
+</html>
