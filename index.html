@@ -88,6 +88,8 @@ table input {
 
 .table-box-2 th {
     font-size: 11px;
+    cursor: pointer;
+    user-select: none;
 }
 
 .direct-amount-input {
@@ -277,7 +279,7 @@ table input:focus {
     </colgroup>
     <thead>
         <tr>
-            <th>Name</th>
+            <th id="lockHeader" onclick="handleKeyClick()" title="Tap 5 times to Lock/Unlock">🔑</th>
             <th>Dry</th>
             <th>Fresh</th>
             <th>Cab</th>
@@ -292,13 +294,13 @@ table input:focus {
             for (let i = 1; i <= 16; i++) {
                 document.write(`
                     <tr>
-                        <td><input type="text" class="name-input" id="ledgerName_${i}" oninput="saveLedger()" onfocus="loadRowToMain(${i})"></td>
-                        <td><input type="number" id="ledgerDry_${i}" min="0" step="any" oninput="updateLedgerRow(${i})" onfocus="loadRowToMain(${i})"></td>
-                        <td><input type="number" id="ledgerFresh_${i}" min="0" step="any" oninput="updateLedgerRow(${i})" onfocus="loadRowToMain(${i})"></td>
-                        <td><input type="number" id="ledgerCab_${i}" min="0" step="any" oninput="updateLedgerRow(${i})" onfocus="loadRowToMain(${i})"></td>
-                        <td><input type="number" id="ledgerBo_${i}" min="0" step="any" oninput="updateLedgerRow(${i})" onfocus="loadRowToMain(${i})"></td>
-                        <td><input type="number" id="ledgerBal_${i}" min="0" step="any" oninput="updateLedgerRow(${i})" onfocus="loadRowToMain(${i})"></td>
-                        <td><input type="number" id="ledgerPay_${i}" min="0" step="any" oninput="updateLedgerRow(${i})" onfocus="loadRowToMain(${i})"></td>
+                        <td><input type="text" class="name-input ledger-field" id="ledgerName_${i}" oninput="saveLedger()" onfocus="loadRowToMain(${i})"></td>
+                        <td><input type="number" class="ledger-field" id="ledgerDry_${i}" min="0" step="any" oninput="updateLedgerRow(${i})" onfocus="loadRowToMain(${i})"></td>
+                        <td><input type="number" class="ledger-field" id="ledgerFresh_${i}" min="0" step="any" oninput="updateLedgerRow(${i})" onfocus="loadRowToMain(${i})"></td>
+                        <td><input type="number" class="ledger-field" id="ledgerCab_${i}" min="0" step="any" oninput="updateLedgerRow(${i})" onfocus="loadRowToMain(${i})"></td>
+                        <td><input type="number" class="ledger-field" id="ledgerBo_${i}" min="0" step="any" oninput="updateLedgerRow(${i})" onfocus="loadRowToMain(${i})"></td>
+                        <td><input type="number" class="ledger-field" id="ledgerBal_${i}" min="0" step="any" oninput="updateLedgerRow(${i})" onfocus="loadRowToMain(${i})"></td>
+                        <td><input type="number" class="ledger-field" id="ledgerPay_${i}" min="0" step="any" oninput="updateLedgerRow(${i})" onfocus="loadRowToMain(${i})"></td>
                         <td><input type="text" id="ledgerAmount_${i}" readonly class="amount"></td>
                     </tr>
                 `);
@@ -315,7 +317,39 @@ table input:focus {
 </div>
 
 <script>
-let activeRow = 1; // Default na nakatutok sa unang row
+let activeRow = 1;
+let tapCount = 0;
+let tapTimer = null;
+let isLocked = false;
+
+function handleKeyClick() {
+    tapCount++;
+    clearTimeout(tapTimer);
+    tapTimer = setTimeout(() => {
+        tapCount = 0;
+    }, 1000); // Reset tap count if more than 1 second passes between taps
+
+    if (tapCount >= 5) {
+        tapCount = 0;
+        isLocked = !isLocked;
+        toggleLockState(isLocked);
+    }
+}
+
+function toggleLockState(locked) {
+    const header = document.getElementById("lockHeader");
+    header.textContent = locked ? "🔒" : "🔑";
+
+    const fields = document.querySelectorAll(".ledger-field");
+    fields.forEach(field => {
+        field.readOnly = locked;
+        if (locked) {
+            field.style.backgroundColor = "#e5e7eb";
+        } else {
+            field.style.backgroundColor = "#white";
+        }
+    });
+}
 
 function getVal(id) {
     const val = parseFloat(document.getElementById(id).value);
@@ -330,6 +364,7 @@ function formatMoney(value) {
 }
 
 function syncFromPanel(type) {
+    if (isLocked) return;
     const val = document.getElementById("sync" + type).value;
     const targetId = type === "Dry" ? "qtyReg" : "qty" + type;
     document.getElementById(targetId).value = val;
@@ -337,6 +372,7 @@ function syncFromPanel(type) {
 }
 
 function syncFromTable(type) {
+    if (isLocked) return;
     const targetId = type === "Reg" ? "syncDry" : "sync" + type;
     const val = document.getElementById("qty" + type).value;
     const syncInput = document.getElementById(targetId);
@@ -347,6 +383,7 @@ function syncFromTable(type) {
 }
 
 function clearMainInputs() {
+    if (isLocked) return;
     document.getElementById("qtyReg").value = "";
     document.getElementById("syncDry").value = "";
     document.getElementById("qtyFresh").value = "";
@@ -360,7 +397,6 @@ function clearMainInputs() {
     calculateMain();
 }
 
-// Kinakalkula ang itaas na table at isinasalin agad sa kasalukuyang active row sa ibaba
 function calculateMain() {
     const regQty = getVal("qtyReg");
     const regPrice = getVal("priceReg");
@@ -391,7 +427,6 @@ function calculateMain() {
     document.getElementById("totalAmount").textContent = formatMoney(total);
     document.getElementById("netTotalAmount").textContent = formatMoney(netTotal);
 
-    // I-update ang active row sa 2nd table gamit ang values mula sa itaas
     document.getElementById(`ledgerDry_${activeRow}`).value = document.getElementById("qtyReg").value;
     document.getElementById(`ledgerFresh_${activeRow}`).value = document.getElementById("qtyFresh").value;
     document.getElementById(`ledgerCab_${activeRow}`).value = document.getElementById("qtyCab").value;
@@ -404,10 +439,9 @@ function calculateMain() {
     saveLedger();
 }
 
-// Kapag nag-type ka direkta sa 2nd table rows
 function updateLedgerRow(row) {
+    if (isLocked) return;
     activeRow = row;
-    // Ilipat ang values mula sa row na ito papunta sa itaas para makalkula
     document.getElementById("qtyReg").value = document.getElementById(`ledgerDry_${row}`).value;
     document.getElementById("syncDry").value = document.getElementById(`ledgerDry_${row}`).value;
 
@@ -423,7 +457,6 @@ function updateLedgerRow(row) {
     document.getElementById("inputBal").value = document.getElementById(`ledgerBal_${row}`).value;
     document.getElementById("inputPay").value = document.getElementById(`ledgerPay_${row}`).value;
 
-    // Kalkulahin ulit sa itaas para makuha ang tamang Amount
     const regAmount = getVal("qtyReg") * getVal("priceReg");
     const freshAmount = getVal("qtyFresh") * getVal("priceFresh");
     const cabAmount = getVal("qtyCab") * getVal("priceCab");
@@ -444,8 +477,8 @@ function updateLedgerRow(row) {
     saveLedger();
 }
 
-// Kapag lumipat ka ng row (onfocus), magpapalit ang active row
 function loadRowToMain(row) {
+    if (isLocked) return;
     activeRow = row;
     document.getElementById("qtyReg").value = document.getElementById(`ledgerDry_${row}`).value;
     document.getElementById("syncDry").value = document.getElementById(`ledgerDry_${row}`).value;
@@ -465,7 +498,6 @@ function loadRowToMain(row) {
     calculateMain();
 }
 
-// Kalkulahin ang pangkalahatang Net Total ng lahat ng rows sa ibaba
 function calculateLedgerTotals() {
     let grandTotal = 0;
     for (let i = 1; i <= 16; i++) {
@@ -475,7 +507,6 @@ function calculateLedgerTotals() {
     document.getElementById("ledgerNetTotal").textContent = formatMoney(grandTotal);
 }
 
-// Auto-save function sa LocalStorage
 function saveLedger() {
     const ledgerData = {};
     for (let i = 1; i <= 16; i++) {
@@ -491,7 +522,6 @@ function saveLedger() {
     localStorage.setItem("miki_ledger_data", JSON.stringify(ledgerData));
 }
 
-// Load data mula sa LocalStorage pagka-open
 function loadLedger() {
     const saved = localStorage.getItem("miki_ledger_data");
     if (!saved) return;
