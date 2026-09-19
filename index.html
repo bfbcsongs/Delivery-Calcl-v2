@@ -273,7 +273,7 @@ table input:focus {
         <td class="amount" id="totalAmount">0</td>
     </tr>
 
-    <!-- ROW 6: BAL (Nakalagay ang BAL sa 3rd column, input sa 4th column) -->
+    <!-- ROW 6: BAL -->
     <tr>
         <td></td>
         <td></td>
@@ -286,7 +286,7 @@ table input:focus {
         </td>
     </tr>
 
-    <!-- ROW 7: PAY (Nakalagay ang PAY sa 3rd column, input sa 4th column) -->
+    <!-- ROW 7: PAY -->
     <tr>
         <td></td>
         <td></td>
@@ -341,7 +341,6 @@ function getNumber(id) {
     const value = parseFloat(
         document.getElementById(id).value
     );
-
     return isNaN(value) ? 0 : value;
 }
 
@@ -379,7 +378,6 @@ function clearAllQty() {
 }
 
 function calculate() {
-
     const regQty = getNumber("qtyReg");
     const regPrice = getNumber("priceReg");
     const regAmount = regQty * regPrice;
@@ -399,16 +397,8 @@ function calculate() {
     const balAmount = getNumber("inputBal");
     const payAmount = getNumber("inputPay");
 
-    const total =
-        regAmount +
-        freshAmount +
-        cabAmount -
-        boAmount;
-
-    const netTotal =
-        total +
-        balAmount -
-        payAmount;
+    const total = regAmount + freshAmount + cabAmount - boAmount;
+    const netTotal = total + balAmount - payAmount;
 
     document.getElementById("amountReg").textContent = formatMoney(regAmount);
     document.getElementById("amountFresh").textContent = formatMoney(freshAmount);
@@ -424,24 +414,17 @@ function saveData() {
     const data = {
         qtyReg: document.getElementById("qtyReg").value,
         priceReg: document.getElementById("priceReg").value,
-
         qtyFresh: document.getElementById("qtyFresh").value,
         priceFresh: document.getElementById("priceFresh").value,
-
         qtyCab: document.getElementById("qtyCab").value,
         priceCab: document.getElementById("priceCab").value,
-
         qtyBo: document.getElementById("qtyBo").value,
         priceBo: document.getElementById("priceBo").value,
-
         inputBal: document.getElementById("inputBal").value,
         inputPay: document.getElementById("inputPay").value
     };
 
-    localStorage.setItem(
-        "miki_table_data",
-        JSON.stringify(data)
-    );
+    localStorage.setItem("miki_table_data", JSON.stringify(data));
 }
 
 function loadData() {
