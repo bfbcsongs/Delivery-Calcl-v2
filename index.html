@@ -3,7 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Miki Calculator & Clients</title>
+<title>Miki Table & Clients</title>
+
 <style>
 * {
     box-sizing: border-box;
@@ -16,7 +17,6 @@ body {
     background: #f3f4f6;
 }
 
-/* 1ST TABLE STYLING */
 .table-box {
     width: 100%;
     max-width: 600px;
@@ -141,7 +141,7 @@ table input:focus {
     background: #dc2626;
 }
 
-/* 2ND TABLE STYLING (CLIENTS TABLE) */
+/* CLIENTS TABLE CONTAINER STYLING */
 .client-container {
     width: 100%;
     max-width: 800px;
@@ -157,7 +157,6 @@ table input:focus {
     table-layout: fixed;
 }
 
-/* Column Widths for Client Table */
 .client-container colgroup col:nth-child(1) { width: 20%; }
 .client-container colgroup col:nth-child(2) { width: 10%; }
 .client-container colgroup col:nth-child(3) { width: 10%; }
@@ -199,10 +198,6 @@ table input:focus {
     padding-left: 6px;
 }
 
-.client-container td input:focus {
-    outline: 2px solid #94a3b8;
-}
-
 .client-amount-cell {
     font-weight: bold;
     text-align: right;
@@ -213,11 +208,42 @@ table input:focus {
     background: #e5e7eb;
     font-weight: bold;
 }
+
+@media (max-width: 400px) {
+    body {
+        padding: 15px 5px;
+    }
+    th, td {
+        height: 24px;
+        padding: 2px;
+    }
+    th {
+        font-size: 11px;
+    }
+    td {
+        font-size: 12px;
+    }
+    table input {
+        width: 70px;
+        height: 20px;
+        font-size: 12px;
+    }
+    .sync-cell label {
+        font-size: 10px;
+    }
+    .clear-btn {
+        font-size: 11px;
+    }
+    .miki {
+        padding-left: 8px;
+    }
+}
 </style>
 </head>
+
 <body>
 
-<!-- 1ST TABLE: MAIN CALCULATOR WITH SYNC PANEL -->
+<!-- 1ST TABLE -->
 <div class="table-box">
 <table>
     <thead>
@@ -232,29 +258,45 @@ table input:focus {
     <!-- ROW 1 -->
     <tr>
         <td class="miki">REG</td>
-        <td><input type="number" id="qtyReg" min="0" step="any" oninput="syncFromTable('Reg')"></td>
-        <td><input type="number" id="priceReg" min="0" step="any" value="45" oninput="calculateMain()"></td>
+        <td>
+            <input type="number" id="qtyReg" min="0" step="any" oninput="syncFromTable('Reg')">
+        </td>
+        <td>
+            <input type="number" id="priceReg" min="0" step="any" value="45" oninput="calculate()">
+        </td>
         <td class="amount" id="amountReg">0</td>
     </tr>
     <!-- ROW 2 -->
     <tr>
         <td class="miki">FRESH</td>
-        <td><input type="number" id="qtyFresh" min="0" step="any" oninput="syncFromTable('Fresh')"></td>
-        <td><input type="number" id="priceFresh" min="0" step="any" value="45" oninput="calculateMain()"></td>
+        <td>
+            <input type="number" id="qtyFresh" min="0" step="any" oninput="syncFromTable('Fresh')">
+        </td>
+        <td>
+            <input type="number" id="priceFresh" min="0" step="any" value="45" oninput="calculate()">
+        </td>
         <td class="amount" id="amountFresh">0</td>
     </tr>
     <!-- ROW 3 -->
     <tr>
         <td class="miki">CAB</td>
-        <td><input type="number" id="qtyCab" min="0" step="any" oninput="syncFromTable('Cab')"></td>
-        <td><input type="number" id="priceCab" min="0" step="any" value="40" oninput="calculateMain()"></td>
+        <td>
+            <input type="number" id="qtyCab" min="0" step="any" oninput="syncFromTable('Cab')">
+        </td>
+        <td>
+            <input type="number" id="priceCab" min="0" step="any" value="40" oninput="calculate()">
+        </td>
         <td class="amount" id="amountCab">0</td>
     </tr>
     <!-- ROW 4 -->
     <tr>
         <td class="miki">BO</td>
-        <td><input type="number" id="qtyBo" min="0" step="any" oninput="syncFromTable('Bo')"></td>
-        <td><input type="number" id="priceBo" min="0" step="any" value="45" oninput="calculateMain()"></td>
+        <td>
+            <input type="number" id="qtyBo" min="0" step="any" oninput="syncFromTable('Bo')">
+        </td>
+        <td>
+            <input type="number" id="priceBo" min="0" step="any" value="45" oninput="calculate()">
+        </td>
         <td class="amount" id="amountBo">0</td>
     </tr>
     <!-- ROW 5: TOTAL -->  
@@ -269,14 +311,18 @@ table input:focus {
         <td></td>
         <td></td>
         <td class="label-cell">BAL</td>
-        <td><input type="number" id="inputBal" min="0" step="any" class="direct-amount-input" oninput="calculateMain()"></td>
+        <td>
+            <input type="number" id="inputBal" min="0" step="any" class="direct-amount-input" oninput="calculate()">
+        </td>
     </tr>
     <!-- ROW 7: PAY -->
     <tr>
         <td></td>
         <td></td>
         <td class="label-cell">PAY</td>
-        <td><input type="number" id="inputPay" min="0" step="any" class="direct-amount-input" oninput="calculateMain()"></td>
+        <td>
+            <input type="number" id="inputPay" min="0" step="any" class="direct-amount-input" oninput="calculate()">
+        </td>
     </tr>
     <!-- ROW 8: NET TOTAL -->  
     <tr>
@@ -314,7 +360,7 @@ table input:focus {
 
 <br>
 
-<!-- 2ND TABLE: 18-ROW CLIENT TABLE -->
+<!-- 2ND TABLE (CLIENTS TABLE - 16 ROWS) -->
 <div class="client-container">
     <table>
         <colgroup>
@@ -332,11 +378,10 @@ table input:focus {
                 <th>Amount</th>
             </tr>
         </thead>
-        <tbody id="tableBody">
-            <!-- Rows 2 to 17 generated via JS -->
+        <tbody id="clientTableBody">
+            <!-- 16 rows generated by script -->
         </tbody>
         <tfoot>
-            <!-- Row 18: Total Row -->
             <tr class="total-row">
                 <td style="text-align: left; padding-left: 6px;">TOTAL</td>
                 <td id="totDry">0</td>
@@ -364,12 +409,11 @@ function formatMoney(value) {
     });
 }
 
-/* 1ST TABLE SYNC & CALCULATION LOGIC */
 function syncFromPanel(type) {
     const val = document.getElementById("sync" + type).value;
     const targetId = type === "Dry" ? "qtyReg" : "qty" + type;
     document.getElementById(targetId).value = val;
-    calculateMain();
+    calculate();
 }
 
 function syncFromTable(type) {
@@ -379,7 +423,7 @@ function syncFromTable(type) {
     if (syncInput) {
         syncInput.value = val;
     }
-    calculateMain();
+    calculate();
 }
 
 function clearAllQty() {
@@ -388,10 +432,10 @@ function clearAllQty() {
         const el = document.getElementById(id);
         if (el) el.value = "";
     });
-    calculateMain();
+    calculate();
 }
 
-function calculateMain() {
+function calculate() {
     const regQty = getNumber("qtyReg");
     const regPrice = getNumber("priceReg");
     const regAmount = regQty * regPrice;
@@ -421,12 +465,12 @@ function calculateMain() {
     document.getElementById("totalAmount").textContent = formatMoney(total);
     document.getElementById("netTotalAmount").textContent = formatMoney(netTotal);
 
-    saveMainData();
+    saveData();
 }
 
-/* 2ND TABLE BUILD & CALCULATION LOGIC (16 ROWS) */
+/* BUILD 2ND TABLE (16 CLIENT ROWS) */
 function buildClientTable() {
-    const tbody = document.getElementById("tableBody");
+    const tbody = document.getElementById("clientTableBody");
     tbody.innerHTML = "";
 
     for (let i = 0; i < 16; i++) {
@@ -439,11 +483,11 @@ function buildClientTable() {
             <td><input type="number" min="0" step="any" class="c-bo" data-index="${i}" oninput="calculateClients()"></td>
             <td><input type="number" min="0" step="any" class="c-bal" data-index="${i}" oninput="calculateClients()"></td>
             <td><input type="number" min="0" step="any" class="c-pay" data-index="${i}" oninput="calculateClients()"></td>
-            <td class="client-amount-cell c-amount" id="amount_${i}">0</td>
+            <td class="client-amount-cell" id="client_amount_${i}">0</td>
         `;
         tbody.appendChild(tr);
     }
-    loadAllData();
+    loadData();
 }
 
 function calculateClients() {
@@ -456,34 +500,29 @@ function calculateClients() {
     const pays = document.querySelectorAll(".c-pay");
 
     let sumDry = 0, sumFresh = 0, sumCab = 0, sumBo = 0, sumBal = 0, sumPay = 0, sumAmount = 0;
-    let savedClients = [];
+    let clientRecords = [];
 
     for (let i = 0; i < 16; i++) {
-        const dryVal = parseFloat(drys[i].value) || 0;
-        const freshVal = parseFloat(freshs[i].value) || 0;
-        const cabVal = parseFloat(cabs[i].value) || 0;
-        const boVal = parseFloat(bos[i].value) || 0;
-        const balVal = parseFloat(bals[i].value) || 0;
-        const payVal = parseFloat(pays[i].value) || 0;
+        const d = parseFloat(drys[i].value) || 0;
+        const f = parseFloat(freshs[i].value) || 0;
+        const c = parseFloat(cabs[i].value) || 0;
+        const b = parseFloat(bos[i].value) || 0;
+        const bal = parseFloat(bals[i].value) || 0;
+        const pay = parseFloat(pays[i].value) || 0;
 
-        const regAmt = dryVal * 45;
-        const freshAmt = freshVal * 45;
-        const cabAmt = cabVal * 40;
-        const boAmt = (boVal / 2) * 45;
+        const rowAmt = (d * 45) + (f * 45) + (c * 40) - ((b / 2) * 45) + bal - pay;
 
-        const rowTotal = regAmt + freshAmt + cabAmt - boAmt + balVal - payVal;
+        document.getElementById("client_amount_" + i).textContent = formatMoney(rowAmt);
 
-        document.getElementById("amount_" + i).textContent = formatMoney(rowTotal);
+        sumDry += d;
+        sumFresh += f;
+        sumCab += c;
+        sumBo += b;
+        sumBal += bal;
+        sumPay += pay;
+        sumAmount += rowAmt;
 
-        sumDry += dryVal;
-        sumFresh += freshVal;
-        sumCab += cabVal;
-        sumBo += boVal;
-        sumBal += balVal;
-        sumPay += payVal;
-        sumAmount += rowTotal;
-
-        savedClients.push({
+        clientRecords.push({
             name: names[i].value,
             dry: drys[i].value,
             fresh: freshs[i].value,
@@ -502,12 +541,11 @@ function calculateClients() {
     document.getElementById("totPay").textContent = sumPay ? formatMoney(sumPay) : "0";
     document.getElementById("totAmount").textContent = formatMoney(sumAmount);
 
-    saveClientData(savedClients);
+    localStorage.setItem("miki_client_data", JSON.stringify(clientRecords));
 }
 
-/* LOCAL STORAGE SAVING & LOADING */
-function saveMainData() {
-    const mainData = {
+function saveData() {
+    const data = {
         qtyReg: document.getElementById("qtyReg").value,
         priceReg: document.getElementById("priceReg").value,
         qtyFresh: document.getElementById("qtyFresh").value,
@@ -519,17 +557,13 @@ function saveMainData() {
         inputBal: document.getElementById("inputBal").value,
         inputPay: document.getElementById("inputPay").value
     };
-    localStorage.setItem("miki_main_calc_data", JSON.stringify(mainData));
+    localStorage.setItem("miki_table_data", JSON.stringify(data));
 }
 
-function saveClientData(savedClients) {
-    localStorage.setItem("miki_client_rows_data", JSON.stringify(savedClients));
-}
-
-function loadAllData() {
-    const savedMain = localStorage.getItem("miki_main_calc_data");
-    if (savedMain) {
-        const data = JSON.parse(savedMain);
+function loadData() {
+    const saved = localStorage.getItem("miki_table_data");
+    if (saved) {
+        const data = JSON.parse(saved);
         document.getElementById("qtyReg").value = data.qtyReg || "";
         document.getElementById("syncDry").value = data.qtyReg || "";
         document.getElementById("priceReg").value = data.priceReg || "45";
@@ -549,9 +583,9 @@ function loadAllData() {
         document.getElementById("inputBal").value = data.inputBal || "";
         document.getElementById("inputPay").value = data.inputPay || "";
     }
-    calculateMain();
+    calculate();
 
-    const savedClients = localStorage.getItem("miki_client_rows_data");
+    const savedClients = localStorage.getItem("miki_client_data");
     if (savedClients) {
         const clients = JSON.parse(savedClients);
         const names = document.querySelectorAll(".c-name");
