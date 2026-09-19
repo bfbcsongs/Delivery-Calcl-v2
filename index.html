@@ -79,6 +79,15 @@ table input {
 .table-box-2 table input {
     font-size: 11px;
     height: 24px;
+    border: none;
+    background: transparent;
+}
+
+.table-box-2 table input.name-input {
+    border: 1px solid #9ca3af;
+    background: white;
+    text-align: left;
+    padding-left: 6px;
 }
 
 .table-box-2 th {
@@ -283,19 +292,19 @@ table input:focus {
         </tr>
     </thead>
     <tbody>
-        <!-- Rows 2 to 17: Input rows (16 rows) -->
+        <!-- Rows 2 to 17: Synced rows (16 rows) -->
         <script>
             for (let i = 1; i <= 16; i++) {
                 document.write(`
                     <tr>
-                        <td><input type="text" id="ledgerName_${i}"></td>
-                        <td><input type="number" id="ledgerDry_${i}" min="0" step="any" oninput="syncMainTable(${i})"></td>
-                        <td><input type="number" id="ledgerFresh_${i}" min="0" step="any" oninput="syncMainTable(${i})"></td>
-                        <td><input type="number" id="ledgerCab_${i}" min="0" step="any" oninput="syncMainTable(${i})"></td>
-                        <td><input type="number" id="ledgerBo_${i}" min="0" step="any" oninput="syncMainTable(${i})"></td>
-                        <td><input type="number" id="ledgerBal_${i}" min="0" step="any" oninput="syncMainTable(${i})"></td>
-                        <td><input type="number" id="ledgerPay_${i}" min="0" step="any" oninput="syncMainTable(${i})"></td>
-                        <td><input type="number" id="ledgerAmount_${i}" min="0" step="any"></td>
+                        <td><input type="text" class="name-input" id="ledgerName_${i}"></td>
+                        <td><input type="text" id="ledgerDry_${i}" readonly></td>
+                        <td><input type="text" id="ledgerFresh_${i}" readonly></td>
+                        <td><input type="text" id="ledgerCab_${i}" readonly></td>
+                        <td><input type="text" id="ledgerBo_${i}" readonly></td>
+                        <td><input type="text" id="ledgerBal_${i}" readonly></td>
+                        <td><input type="text" id="ledgerPay_${i}" readonly></td>
+                        <td><input type="text" id="ledgerAmount_${i}" readonly class="amount"></td>
                     </tr>
                 `);
             }
@@ -379,32 +388,19 @@ function calculate() {
     document.getElementById("totalAmount").textContent = formatMoney(total);
     document.getElementById("netTotalAmount").textContent = formatMoney(netTotal);
 
+    // I-sync ang mga values patungo sa unang row (Row 2 / index 1) ng 2nd table
+    document.getElementById("ledgerDry_1").value = document.getElementById("qtyReg").value;
+    document.getElementById("ledgerFresh_1").value = document.getElementById("qtyFresh").value;
+    document.getElementById("ledgerCab_1").value = document.getElementById("qtyCab").value;
+    document.getElementById("ledgerBo_1").value = document.getElementById("qtyBo").value;
+    document.getElementById("ledgerBal_1").value = document.getElementById("inputBal").value;
+    document.getElementById("ledgerPay_1").value = document.getElementById("inputPay").value;
+    document.getElementById("ledgerAmount_1").value = formatMoney(netTotal);
+    
+    // I-update din ang net total sa huling row ng 2nd table
+    document.getElementById("ledgerNetTotal").textContent = formatMoney(netTotal);
+
     saveData();
-}
-
-function syncMainTable(row) {
-    // Kinukuha ang values mula sa tinukoy na row sa ikalawang table
-    const dryVal = document.getElementById(`ledgerDry_${row}`).value;
-    const freshVal = document.getElementById(`ledgerFresh_${row}`).value;
-    const cabVal = document.getElementById(`ledgerCab_${row}`).value;
-    const boVal = document.getElementById(`ledgerBo_${row}`).value;
-    const balVal = document.getElementById(`ledgerBal_${row}`).value;
-    const payVal = document.getElementById(`ledgerPay_${row}`).value;
-
-    // Ilalagay ang mga ito sa main table sa taas
-    if(dryVal !== "") document.getElementById("qtyReg").value = dryVal;
-    if(freshVal !== "") document.getElementById("qtyFresh").value = freshVal;
-    if(cabVal !== "") document.getElementById("qtyCab").value = cabVal;
-    if(boVal !== "") document.getElementById("qtyBo").value = boVal;
-    if(balVal !== "") document.getElementById("inputBal").value = balVal;
-    if(payVal !== "") document.getElementById("inputPay").value = payVal;
-
-    // I-trigger ang calculation para ma-update ang Net Total sa taas
-    calculate();
-
-    // Kunin ang nakuhang net total sa taas at ilagay sa Amount ng row na ito sa ikalawang table
-    const netTotalText = document.getElementById("netTotalAmount").textContent.replace(/,/g, '');
-    document.getElementById(`ledgerAmount_${row}`).value = netTotalText;
 }
 
 function saveData() {
@@ -418,7 +414,8 @@ function saveData() {
         qtyBo: document.getElementById("qtyBo").value,
         priceBo: document.getElementById("priceBo").value,
         inputBal: document.getElementById("inputBal").value,
-        inputPay: document.getElementById("inputPay").value
+        inputPay: document.getElementById("inputPay").value,
+        ledgerName_1: document.getElementById("ledgerName_1").value
     };
     localStorage.setItem("miki_table_data", JSON.stringify(data));
 }
@@ -449,6 +446,7 @@ function loadData() {
 
     document.getElementById("inputBal").value = data.inputBal || "";
     document.getElementById("inputPay").value = data.inputPay || "";
+    document.getElementById("ledgerName_1").value = data.ledgerName_1 || "";
 
     calculate();
 }
@@ -457,4 +455,4 @@ window.onload = loadData;
 </script>
 
 </body>
-                       </html>
+</html>
