@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Miki Table & Clients</title>
+<title>Miki Client Table</title>
 <style>
 * {
     box-sizing: border-box;
@@ -11,17 +11,18 @@
 
 body {
     margin: 0;
-    padding: 20px 10px;
+    padding: 10px;
     font-family: Arial, sans-serif;
     background: #f3f4f6;
 }
 
-.table-box {
+.table-container {
     width: 100%;
-    max-width: 600px;
-    margin: 0 auto 20px auto;
+    max-width: 800px;
+    margin: 0 auto;
     background: white;
     border: 1px solid #d1d5db;
+    overflow-x: auto;
 }
 
 table {
@@ -30,284 +31,73 @@ table {
     table-layout: fixed;
 }
 
-th,
-td {
+/* Column Widths */
+colgroup col:nth-child(1) { width: 20%; }
+colgroup col:nth-child(2) { width: 10%; }
+colgroup col:nth-child(3) { width: 10%; }
+colgroup col:nth-child(4) { width: 10%; }
+colgroup col:nth-child(5) { width: 10%; }
+colgroup col:nth-child(6) { width: 10%; }
+colgroup col:nth-child(7) { width: 10%; }
+colgroup col:nth-child(8) { width: 20%; }
+
+th, td {
     border: 1px solid #d1d5db;
-    height: 26px; 
+    height: 28px;
     padding: 2px 4px;
     text-align: center;
     vertical-align: middle;
+    font-size: 13px;
 }
 
 th {
     background: #111827;
     color: white;
-    font-size: 13px;
     font-weight: bold;
 }
 
-td {
-    background: white;
-    font-size: 14px;
-}
-
-.miki {
-    text-align: left;
-    padding-left: 12px;
-    font-weight: bold;
-}
-
-.label-cell {
-    font-weight: bold;
-    text-align: center;
-}
-
-table input {
-    width: 85px;
-    max-width: 100%;
-    height: 22px;
+td input {
+    width: 100%;
+    height: 24px;
     padding: 2px;
     border: 1px solid #9ca3af;
-    border-radius: 4px;
+    border-radius: 3px;
     text-align: center;
-    font-size: 14px;
+    font-size: 13px;
     background: white;
 }
 
-.direct-amount-input {
-    width: 100% !important;
-    height: 24px !important;
-    font-weight: bold;
+td input[type="text"] {
+    text-align: left;
+    padding-left: 6px;
 }
 
-table input:focus {
+td input:focus {
     outline: 2px solid #94a3b8;
 }
 
-.amount {
+.amount-cell {
     font-weight: bold;
+    text-align: right;
+    padding-right: 8px;
 }
 
-.sync-panel {
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    gap: 6px;
-    padding: 10px;
-    background: #111827;
-    border-top: 1px solid #d1d5db;
-}
-
-.sync-cell {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-}
-
-.sync-cell label {
-    color: white;
-    font-size: 11px;
+.total-row td {
+    background: #e5e7eb;
     font-weight: bold;
-    margin-bottom: 4px;
-    text-transform: uppercase;
-}
-
-.sync-cell input {
-    width: 100%;
-    height: 32px;
-    padding: 4px;
-    border: 1px solid #9ca3af;
-    border-radius: 4px;
-    text-align: center;
-    font-size: 14px;
-    background: white;
-}
-
-.clear-btn, .action-btn {
-    width: 100%;
-    height: 32px;
-    margin-top: 19px;
-    background: #ef4444;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    font-size: 12px;
-    font-weight: bold;
-    cursor: pointer;
-}
-
-.clear-btn:hover, .action-btn:hover {
-    background: #dc2626;
-}
-
-.action-btn {
-    background: #2563eb;
-    margin-top: 0;
-}
-.action-btn:hover {
-    background: #1d4ed8;
-}
-
-.client-section {
-    width: 100%;
-    max-width: 600px;
-    margin: 0 auto;
-    background: white;
-    border: 1px solid #d1d5db;
-    padding: 10px;
-    overflow-x: auto;
-}
-
-.client-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 10px;
-}
-
-.client-header h3 {
-    margin: 0;
-    font-size: 15px;
-    color: #111827;
-}
-
-@media (max-width: 400px) {
-    body {
-        padding: 15px 5px;
-    }
-    th, td {
-        height: 24px;
-        padding: 2px;
-    }
-    th {
-        font-size: 11px;
-    }
-    td {
-        font-size: 12px;
-    }
-    table input {
-        width: 70px;
-        height: 20px;
-        font-size: 12px;
-    }
-    .sync-cell label {
-        font-size: 10px;
-    }
-    .clear-btn, .action-btn {
-        font-size: 11px;
-    }
-    .miki {
-        padding-left: 8px;
-    }
 }
 </style>
 </head>
 <body>
 
-<div class="table-box">
-<table>
-    <thead>
-        <tr>
-            <th>Item</th>
-            <th>Qty</th>
-            <th>Price</th>
-            <th>Amount</th>
-        </tr>
-    </thead>
-    <tbody>
-    <!-- ROW 1 -->
-    <tr>
-        <td class="miki">REG</td>
-        <td><input type="number" id="qtyReg" min="0" step="any" oninput="syncFromTable('Reg')"></td>
-        <td><input type="number" id="priceReg" min="0" step="any" value="45" oninput="calculate()"></td>
-        <td class="amount" id="amountReg">0</td>
-    </tr>
-    <!-- ROW 2 -->
-    <tr>
-        <td class="miki">FRESH</td>
-        <td><input type="number" id="qtyFresh" min="0" step="any" oninput="syncFromTable('Fresh')"></td>
-        <td><input type="number" id="priceFresh" min="0" step="any" value="45" oninput="calculate()"></td>
-        <td class="amount" id="amountFresh">0</td>
-    </tr>
-    <!-- ROW 3 -->
-    <tr>
-        <td class="miki">CAB</td>
-        <td><input type="number" id="qtyCab" min="0" step="any" oninput="syncFromTable('Cab')"></td>
-        <td><input type="number" id="priceCab" min="0" step="any" value="40" oninput="calculate()"></td>
-        <td class="amount" id="amountCab">0</td>
-    </tr>
-    <!-- ROW 4 -->
-    <tr>
-        <td class="miki">BO</td>
-        <td><input type="number" id="qtyBo" min="0" step="any" oninput="syncFromTable('Bo')"></td>
-        <td><input type="number" id="priceBo" min="0" step="any" value="45" oninput="calculate()"></td>
-        <td class="amount" id="amountBo">0</td>
-    </tr>
-    <!-- ROW 5: TOTAL -->  
-    <tr>
-        <td class="miki">TOTAL</td>
-        <td></td>
-        <td></td>
-        <td class="amount" id="totalAmount">0</td>
-    </tr>
-    <!-- ROW 6: BAL -->
-    <tr>
-        <td></td>
-        <td></td>
-        <td class="label-cell">BAL</td>
-        <td><input type="number" id="inputBal" min="0" step="any" class="direct-amount-input" oninput="calculate()"></td>
-    </tr>
-    <!-- ROW 7: PAY -->
-    <tr>
-        <td></td>
-        <td></td>
-        <td class="label-cell">PAY</td>
-        <td><input type="number" id="inputPay" min="0" step="any" class="direct-amount-input" oninput="calculate()"></td>
-    </tr>
-    <!-- ROW 8: NET TOTAL -->  
-    <tr>
-        <td class="miki">NET TOTAL</td>
-        <td></td>
-        <td></td>
-        <td class="amount" id="netTotalAmount">0</td>
-    </tr>
-    </tbody>
-</table>
-
-    <!-- 5-COLUMN SYNC PANEL AT THE BOTTOM -->
-    <div class="sync-panel">
-        <div class="sync-cell">
-            <label>Dry</label>
-            <input type="number" id="syncDry" min="0" step="any" oninput="syncFromPanel('Dry')">
-        </div>
-        <div class="sync-cell">
-            <label>Fresh</label>
-            <input type="number" id="syncFresh" min="0" step="any" oninput="syncFromPanel('Fresh')">
-        </div>
-        <div class="sync-cell">
-            <label>Cab</label>
-            <input type="number" id="syncCab" min="0" step="any" oninput="syncFromPanel('Cab')">
-        </div>
-        <div class="sync-cell">
-            <label>BO</label>
-            <input type="number" id="syncBo" min="0" step="any" oninput="syncFromPanel('Bo')">
-        </div>
-        <div class="sync-cell">
-            <button class="clear-btn" onclick="clearAllQty()">CLEAR</button>
-        </div>
-    </div>
-</div>
-
-<!-- CLIENTS SECTION TABLE -->
-<div class="client-section">
-    <div class="client-header">
-        <h3>Clients List</h3>
-        <button class="action-btn" style="width: 120px;" onclick="addClientRow()">Add Client</button>
-    </div>
-    <table id="clientTable">
+<div class="table-container">
+    <table id="mikiTable">
+        <colgroup>
+            <col><col><col><col><col><col><col><col>
+        </colgroup>
         <thead>
             <tr>
-                <th>Name</th>
+                <th>Names</th>
                 <th>Dry</th>
                 <th>Fresh</th>
                 <th>Cab</th>
@@ -315,23 +105,28 @@ table input:focus {
                 <th>Bal</th>
                 <th>Pay</th>
                 <th>Amount</th>
-                <th>Action</th>
             </tr>
         </thead>
-        <tbody id="clientTableBody">
-            <!-- Dynamic Client Rows Go Here -->
+        <tbody id="tableBody">
+            <!-- Rows 2 to 17 will be generated here via JavaScript -->
         </tbody>
+        <tfoot>
+            <!-- Row 18: Total Row -->
+            <tr class="total-row">
+                <td style="text-align: left; padding-left: 6px;">TOTAL</td>
+                <td id="totDry">0</td>
+                <td id="totFresh">0</td>
+                <td id="totCab">0</td>
+                <td id="totBo">0</td>
+                <td id="totBal">0</td>
+                <td id="totPay">0</td>
+                <td class="amount-cell" id="totAmount">0</td>
+            </tr>
+        </tfoot>
     </table>
 </div>
 
 <script>
-function getNumber(id) {
-    const value = parseFloat(
-        document.getElementById(id).value
-    );
-    return isNaN(value) ? 0 : value;
-}
-
 function formatMoney(value) {
     return value.toLocaleString("en-US", {
         minimumFractionDigits: 0,
@@ -339,184 +134,128 @@ function formatMoney(value) {
     });
 }
 
-function syncFromPanel(type) {
-    const val = document.getElementById("sync" + type).value;
-    const targetId = type === "Dry" ? "qtyReg" : "qty" + type;
-    document.getElementById(targetId).value = val;
-    calculate();
-}
-
-function syncFromTable(type) {
-    const targetId = type === "Reg" ? "syncDry" : "sync" + type;
-    const val = document.getElementById("qty" + type).value;
-    const syncInput = document.getElementById(targetId);
-    if (syncInput) {
-        syncInput.value = val;
-    }
-    calculate();
-}
-
-function clearAllQty() {
-    const qtyIds = ["qtyReg", "qtyFresh", "qtyCab", "qtyBo", "syncDry", "syncFresh", "syncCab", "syncBo", "inputBal", "inputPay"];
-    qtyIds.forEach(id => {
-        const el = document.getElementById(id);
-        if (el) el.value = "";
-    });
-    calculate();
-}
-
-function calculate() {
-    const regQty = getNumber("qtyReg");
-    const regPrice = getNumber("priceReg");
-    const regAmount = regQty * regPrice;
-
-    const freshQty = getNumber("qtyFresh");
-    const freshPrice = getNumber("priceFresh");
-    const freshAmount = freshQty * freshPrice;
-
-    const cabQty = getNumber("qtyCab");
-    const cabPrice = getNumber("priceCab");
-    const cabAmount = cabQty * cabPrice;
-
-    const boQty = getNumber("qtyBo");
-    const boPrice = getNumber("priceBo");
-    const boAmount = (boQty / 2) * boPrice;
-
-    const balAmount = getNumber("inputBal");
-    const payAmount = getNumber("inputPay");
-
-    const total = regAmount + freshAmount + cabAmount - boAmount;
-    const netTotal = total + balAmount - payAmount;
-
-    document.getElementById("amountReg").textContent = formatMoney(regAmount);
-    document.getElementById("amountFresh").textContent = formatMoney(freshAmount);
-    document.getElementById("amountCab").textContent = formatMoney(cabAmount);
-    document.getElementById("amountBo").textContent = formatMoney(boAmount);
-    document.getElementById("totalAmount").textContent = formatMoney(total);
-    document.getElementById("netTotalAmount").textContent = formatMoney(netTotal);
-
-    saveData();
-}
-
-// CLIENT ROWS LOGIC
-let clients = [];
-
-function addClientRow(data = null) {
-    const client = data || {
-        name: "",
-        dry: "",
-        fresh: "",
-        cab: "",
-        bo: "",
-        bal: "",
-        pay: ""
-    };
-    clients.push(client);
-    renderClients();
-    saveData();
-}
-
-function updateClientField(index, field, value) {
-    clients[index][field] = value;
-    renderClients();
-    saveData();
-}
-
-function removeClient(index) {
-    clients.splice(index, 1);
-    renderClients();
-    saveData();
-}
-
-function renderClients() {
-    const tbody = document.getElementById("clientTableBody");
+// Generate Rows 2 to 17 (16 client rows)
+function buildTable() {
+    const tbody = document.getElementById("tableBody");
     tbody.innerHTML = "";
 
-    clients.forEach((client, index) => {
-        const dryVal = parseFloat(client.dry) || 0;
-        const freshVal = parseFloat(client.fresh) || 0;
-        const cabVal = parseFloat(client.cab) || 0;
-        const boVal = parseFloat(client.bo) || 0;
-        const balVal = parseFloat(client.bal) || 0;
-        const payVal = parseFloat(client.pay) || 0;
-
-        const regAmtClient = dryVal * 45;
-        const freshAmtClient = freshVal * 45;
-        const cabAmtClient = cabVal * 40;
-        const boAmtClient = (boVal / 2) * 45;
-
-        const subTotal = regAmtClient + freshAmtClient + cabAmtClient - boAmtClient;
-        const clientNetTotal = subTotal + balVal - payVal;
-
+    for (let i = 0; i < 16; i++) {
         const tr = document.createElement("tr");
         tr.innerHTML = `
-            <td><input type="text" value="${client.name || ''}" oninput="updateClientField(${index}, 'name', this.value)" style="width:100%"></td>
-            <td><input type="number" value="${client.dry || ''}" oninput="updateClientField(${index}, 'dry', this.value)" style="width:100%"></td>
-            <td><input type="number" value="${client.fresh || ''}" oninput="updateClientField(${index}, 'fresh', this.value)" style="width:100%"></td>
-            <td><input type="number" value="${client.cab || ''}" oninput="updateClientField(${index}, 'cab', this.value)" style="width:100%"></td>
-            <td><input type="number" value="${client.bo || ''}" oninput="updateClientField(${index}, 'bo', this.value)" style="width:100%"></td>
-            <td><input type="number" value="${client.bal || ''}" oninput="updateClientField(${index}, 'bal', this.value)" style="width:100%"></td>
-            <td><input type="number" value="${client.pay || ''}" oninput="updateClientField(${index}, 'pay', this.value)" style="width:100%"></td>
-            <td class="amount">${formatMoney(clientNetTotal)}</td>
-            <td><button onclick="removeClient(${index})" style="background:#ef4444; color:white; border:none; padding:2px 6px; border-radius:3px; cursor:pointer;">X</button></td>
+            <td><input type="text" class="c-name" data-index="${i}" placeholder="Client ${i+1}"></td>
+            <td><input type="number" min="0" step="any" class="c-dry" data-index="${i}" oninput="calculateAll()"></td>
+            <td><input type="number" min="0" step="any" class="c-fresh" data-index="${i}" oninput="calculateAll()"></td>
+            <td><input type="number" min="0" step="any" class="c-cab" data-index="${i}" oninput="calculateAll()"></td>
+            <td><input type="number" min="0" step="any" class="c-bo" data-index="${i}" oninput="calculateAll()"></td>
+            <td><input type="number" min="0" step="any" class="c-bal" data-index="${i}" oninput="calculateAll()"></td>
+            <td><input type="number" min="0" step="any" class="c-pay" data-index="${i}" oninput="calculateAll()"></td>
+            <td class="amount-cell c-amount" id="amount_${i}">0</td>
         `;
         tbody.appendChild(tr);
-    });
+    }
+    loadData();
 }
 
-function saveData() {
-    const data = {
-        qtyReg: document.getElementById("qtyReg").value,
-        priceReg: document.getElementById("priceReg").value,
-        qtyFresh: document.getElementById("qtyFresh").value,
-        priceFresh: document.getElementById("priceFresh").value,
-        qtyCab: document.getElementById("qtyCab").value,
-        priceCab: document.getElementById("priceCab").value,
-        qtyBo: document.getElementById("qtyBo").value,
-        priceBo: document.getElementById("priceBo").value,
-        inputBal: document.getElementById("inputBal").value,
-        inputPay: document.getElementById("inputPay").value,
-        clients: clients
-    };
+function calculateAll() {
+    const names = document.querySelectorAll(".c-name");
+    const drys = document.querySelectorAll(".c-dry");
+    const freshs = document.querySelectorAll(".c-fresh");
+    const cabs = document.querySelectorAll(".c-cab");
+    const bos = document.querySelectorAll(".c-bo");
+    const bals = document.querySelectorAll(".c-bal");
+    const pays = document.querySelectorAll(".c-pay");
 
-    localStorage.setItem("miki_table_data_clients", JSON.stringify(data));
+    let sumDry = 0, sumFresh = 0, sumCab = 0, sumBo = 0, sumBal = 0, sumPay = 0, sumAmount = 0;
+
+    let savedData = [];
+
+    for (let i = 0; i < 16; i++) {
+        const dryVal = parseFloat(drys[i].value) || 0;
+        const freshVal = parseFloat(freshs[i].value) || 0;
+        const cabVal = parseFloat(cabs[i].value) || 0;
+        const boVal = parseFloat(bos[i].value) || 0;
+        const balVal = parseFloat(bals[i].value) || 0;
+        const payVal = parseFloat(pays[i].value) || 0;
+        const nameVal = names[i].value;
+
+        // Computation per client row: 
+        // Dry @ 45, Fresh @ 45, Cab @ 40, BO @ 45 (divided by 2), plus Bal, minus Pay
+        const regAmt = dryVal * 45;
+        const freshAmt = freshVal * 45;
+        const cabAmt = cabVal * 40;
+        const boAmt = (boVal / 2) * 45;
+
+        const rowTotal = regAmt + freshAmt + cabAmt - boAmt + balVal - payVal;
+
+        document.getElementById("amount_" + i).textContent = formatMoney(rowTotal);
+
+        sumDry += dryVal;
+        sumFresh += freshVal;
+        sumCab += cabVal;
+        sumBo += boVal;
+        sumBal += balVal;
+        sumPay += payVal;
+        sumAmount += rowTotal;
+
+        savedData.push({
+            name: nameVal,
+            dry: drys[i].value,
+            fresh: freshs[i].value,
+            cab: cabs[i].value,
+            bo: bos[i].value,
+            bal: bals[i].value,
+            pay: pays[i].value
+        });
+    }
+
+    // Update Row 18 (Totals)
+    document.getElementById("totDry").textContent = sumDry ? formatMoney(sumDry) : "0";
+    document.getElementById("totFresh").textContent = sumFresh ? formatMoney(sumFresh) : "0";
+    document.getElementById("totCab").textContent = sumCab ? formatMoney(sumCab) : "0";
+    document.getElementById("totBo").textContent = sumBo ? formatMoney(sumBo) : "0";
+    document.getElementById("totBal").textContent = sumBal ? formatMoney(sumBal) : "0";
+    document.getElementById("totPay").textContent = sumPay ? formatMoney(sumPay) : "0";
+    document.getElementById("totAmount").textContent = formatMoney(sumAmount);
+
+    localStorage.setItem("miki_18_rows_data", JSON.stringify(savedData));
 }
 
 function loadData() {
-    const saved = localStorage.getItem("miki_table_data_clients");
-
-    if (!saved) {
-        calculate();
-        return;
-    }
+    const saved = localStorage.getItem("miki_18_rows_data");
+    if (!saved) return;
 
     const data = JSON.parse(saved);
+    const names = document.querySelectorAll(".c-name");
+    const drys = document.querySelectorAll(".c-dry");
+    const freshs = document.querySelectorAll(".c-fresh");
+    const cabs = document.querySelectorAll(".c-cab");
+    const bos = document.querySelectorAll(".c-bo");
+    const bals = document.querySelectorAll(".c-bal");
+    const pays = document.querySelectorAll(".c-pay");
 
-    document.getElementById("qtyReg").value = data.qtyReg || "";
-    document.getElementById("syncDry").value = data.qtyReg || "";
-    document.getElementById("priceReg").value = data.priceReg || "45";
+    data.forEach((item, i) => {
+        if (i < 16) {
+            names[i].value = item.name || "";
+            drys[i].value = item.dry || "";
+            freshs[i].value = item.fresh || "";
+            cabs[i].value = item.cab || "";
+            bos[i].value = item.bo || "";
+            bals[i].value = item.bal || "";
+            pays[i].value = item.pay || "";
+        }
+    });
 
-    document.getElementById("qtyFresh").value = data.qtyFresh || "";
-    document.getElementById("syncFresh").value = data.qtyFresh || "";
-    document.getElementById("priceFresh").value = data.priceFresh || "45";
+    // Add event listener to names to save on input
+    names.forEach((input) => {
+        input.addEventListener("input", calculateAll);
+    });
 
-    document.getElementById("qtyCab").value = data.qtyCab || "";
-    document.getElementById("syncCab").value = data.qtyCab || "";
-    document.getElementById("priceCab").value = data.priceCab || "40";
-
-    document.getElementById("qtyBo").value = data.qtyBo || "";
-    document.getElementById("syncBo").value = data.qtyBo || "";
-    document.getElementById("priceBo").value = data.priceBo || "45";
-
-    document.getElementById("inputBal").value = data.inputBal || "";
-    document.getElementById("inputPay").value = data.inputPay || "";
-
-    clients = data.clients || [];
-    renderClients();
-    calculate();
+    calculateAll();
 }
 
-window.onload = loadData;
+window.onload = function() {
+    buildTable();
+};
 </script>
 
 </body>
