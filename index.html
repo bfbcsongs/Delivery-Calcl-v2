@@ -294,13 +294,13 @@ table input:focus {
             for (let i = 1; i <= 16; i++) {
                 document.write(`
                     <tr>
-                        <td><input type="text" class="name-input ledger-field" id="ledgerName_${i}" oninput="saveLedger()" onfocus="loadRowToMain(${i})"></td>
-                        <td><input type="number" class="ledger-field" id="ledgerDry_${i}" min="0" step="any" oninput="updateLedgerRow(${i})" onfocus="loadRowToMain(${i})"></td>
-                        <td><input type="number" class="ledger-field" id="ledgerFresh_${i}" min="0" step="any" oninput="updateLedgerRow(${i})" onfocus="loadRowToMain(${i})"></td>
-                        <td><input type="number" class="ledger-field" id="ledgerCab_${i}" min="0" step="any" oninput="updateLedgerRow(${i})" onfocus="loadRowToMain(${i})"></td>
-                        <td><input type="number" class="ledger-field" id="ledgerBo_${i}" min="0" step="any" oninput="updateLedgerRow(${i})" onfocus="loadRowToMain(${i})"></td>
-                        <td><input type="number" class="ledger-field" id="ledgerBal_${i}" min="0" step="any" oninput="updateLedgerRow(${i})" onfocus="loadRowToMain(${i})"></td>
-                        <td><input type="number" class="ledger-field" id="ledgerPay_${i}" min="0" step="any" oninput="updateLedgerRow(${i})" onfocus="loadRowToMain(${i})"></td>
+                        <td><input type="text" class="name-input" id="ledgerName_${i}" oninput="saveLedger()" onfocus="loadRowToMain(${i})"></td>
+                        <td><input type="number" id="ledgerDry_${i}" min="0" step="any" oninput="updateLedgerRow(${i})" onfocus="loadRowToMain(${i})"></td>
+                        <td><input type="number" id="ledgerFresh_${i}" min="0" step="any" oninput="updateLedgerRow(${i})" onfocus="loadRowToMain(${i})"></td>
+                        <td><input type="number" id="ledgerCab_${i}" min="0" step="any" oninput="updateLedgerRow(${i})" onfocus="loadRowToMain(${i})"></td>
+                        <td><input type="number" id="ledgerBo_${i}" min="0" step="any" oninput="updateLedgerRow(${i})" onfocus="loadRowToMain(${i})"></td>
+                        <td><input type="number" id="ledgerBal_${i}" min="0" step="any" oninput="updateLedgerRow(${i})" onfocus="loadRowToMain(${i})"></td>
+                        <td><input type="number" id="ledgerPay_${i}" min="0" step="any" oninput="updateLedgerRow(${i})" onfocus="loadRowToMain(${i})"></td>
                         <td><input type="text" id="ledgerAmount_${i}" readonly class="amount"></td>
                     </tr>
                 `);
@@ -327,7 +327,7 @@ function handleKeyClick() {
     clearTimeout(tapTimer);
     tapTimer = setTimeout(() => {
         tapCount = 0;
-    }, 1000); // Reset tap count if more than 1 second passes between taps
+    }, 1000);
 
     if (tapCount >= 5) {
         tapCount = 0;
@@ -340,14 +340,11 @@ function toggleLockState(locked) {
     const header = document.getElementById("lockHeader");
     header.textContent = locked ? "🔒" : "🔑";
 
-    const fields = document.querySelectorAll(".ledger-field");
-    fields.forEach(field => {
+    // Only apply lock/unlock to the 1st column inputs (Name fields)
+    const nameInputs = document.querySelectorAll(".name-input");
+    nameInputs.forEach(field => {
         field.readOnly = locked;
-        if (locked) {
-            field.style.backgroundColor = "#e5e7eb";
-        } else {
-            field.style.backgroundColor = "#white";
-        }
+        field.style.backgroundColor = locked ? "#e5e7eb" : "white";
     });
 }
 
@@ -364,7 +361,6 @@ function formatMoney(value) {
 }
 
 function syncFromPanel(type) {
-    if (isLocked) return;
     const val = document.getElementById("sync" + type).value;
     const targetId = type === "Dry" ? "qtyReg" : "qty" + type;
     document.getElementById(targetId).value = val;
@@ -372,7 +368,6 @@ function syncFromPanel(type) {
 }
 
 function syncFromTable(type) {
-    if (isLocked) return;
     const targetId = type === "Reg" ? "syncDry" : "sync" + type;
     const val = document.getElementById("qty" + type).value;
     const syncInput = document.getElementById(targetId);
@@ -383,7 +378,6 @@ function syncFromTable(type) {
 }
 
 function clearMainInputs() {
-    if (isLocked) return;
     document.getElementById("qtyReg").value = "";
     document.getElementById("syncDry").value = "";
     document.getElementById("qtyFresh").value = "";
@@ -440,7 +434,6 @@ function calculateMain() {
 }
 
 function updateLedgerRow(row) {
-    if (isLocked) return;
     activeRow = row;
     document.getElementById("qtyReg").value = document.getElementById(`ledgerDry_${row}`).value;
     document.getElementById("syncDry").value = document.getElementById(`ledgerDry_${row}`).value;
@@ -478,7 +471,6 @@ function updateLedgerRow(row) {
 }
 
 function loadRowToMain(row) {
-    if (isLocked) return;
     activeRow = row;
     document.getElementById("qtyReg").value = document.getElementById(`ledgerDry_${row}`).value;
     document.getElementById("syncDry").value = document.getElementById(`ledgerDry_${row}`).value;
